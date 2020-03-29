@@ -257,13 +257,16 @@
     // Add the draw tool to the map
     map.addControl(draw);
 
+    /***********************************************************/
     function updateRoute() {
       // Set the profile
       var profile = "driving";
       // Get the coordinates that were drawn on the map
-      var data = draw.getAll();
-      var lastFeature = data.features.length - 1;
-      var coords = data.features[lastFeature].geometry.coordinates;
+   
+      var data = populateCoords({start: [ -118.276945, 34.068798], dest: [ -118.273285, 34.052841]});
+      console.log('Made it');
+      var lastFeature = data.length - 1;
+      var coords = data;
       // Format the coordinates
       var newCoords = coords.join(';')
       // Set the radius for each coordinate pair to 25 meters
@@ -271,16 +274,81 @@
       coords.forEach(element => {
         radius.push(25);
       });
+      console.log(newCoords);
       getMatch(newCoords, radius, profile);
     }
 
+    // tolerance between 0 and 1
+    // 
+    function populateCoords({start: [x1, y1], dest: [x2, y2]}, tolerance){
+     // find route
+        const interval = (Math.abs(x1 - x2) + Math.abs(y1-y2))/ 10.0; // computes maximum route length assuming we are always moving towards destination
+        console.log('Interval = %f', interval);
+        let currLoc = {x: x1, y: y1, numAccidents: 0};
+        let nextLocation = {};
+        const dest = {x: x2, y: y2, numAccidents: 0};
+        const locationList = [];
+        locationList.push([[x1, y1]]);
+
+        $.getJSON('./static/num_accidents.geojson', function(data){
+            for(i = 0; i < 50; i++){
+               positivePoints = data.features.filter(function(T){ 
+                  const xCord = T.geometry.coordinates[0];
+                  const yCord = T.geometry.coordinates[1];
+
+                    return Math.abs(dest.x - xCord) < Math.abs(dest.x - currLoc.x) && 
+                           Math.abs(dest.y - yCord) < Math.abs(dest.y - currLoc.y) && 
+                           Math.abs(currLoc.x - xCord) + Math.abs(currLoc.y - yCord) < interval && xCord != currLoc.x && yCord != currLoc.y;
+                });
+            // Choose the point that has the least number of accidents
+            let minAccidents = -1;
+            if(positivePoints.length == 0){
+              currLoc.x = dest.x - currLoc.x > 0? currLoc.x - interval/2.0 : currLoc.x + interval/2.0 ;
+              currLoc.y = dest.x - currLoc.y > 0? currLoc.y + interval/2.0 : currLoc.y - interval/2.0 ;
+              locationList.push(JSON.parse(JSON.stringify([currLoc.x, currLoc.y])));
+              console.log("pushed dummy point at %f, %f", currLoc.x, currLoc.y);
+              continue
+            }
+                for (j = 0; j < positivePoints.length; j++){
+                  if(minAccidents == -1 || minAccidents > positivePoints[j].properties.num_accidents){
+                    minAccidents = positivePoints[j].properties.num_accidents
+                    currLoc = {x: positivePoints[j].geometry.coordinates[0], y: positivePoints[j].geometry.coordinates[1]}
+                  }
+                }
+                locationList.push(JSON.parse(JSON.stringify([currLoc.x, currLoc.y])));
+                console.log(`%d reached coords %f and %f. Number of positive points %d`, i, currLoc.x, currLoc.y, positivePoints.length );  
+                if(Math.abs(dest.x - currLoc.x) < interval && Math.abs(dest.y - currLoc.y) < interval){
+                  locationList.push([[dest.x, dest.y]]);
+                  console.log("END IS REACHED")
+                  console.log(locationList.join(';'));
+                  break;
+                }
+            }
+            // 3 properties
+            // A) distance from currLoc, B) Safety (num_accidents), C) distance remaining to destination (amount of progress)
+
+        });
+        console.log("Finshing Execution");
+        return locationList;
+    
+    //  const coords = [[-118.14217, 34.10810],
+    //     [-118.267612, 33.997698 ] ,    
+    //     [ -118.289852, 34.004067],     
+    //     [-118.08217, 34.04810],        
+    //     [-118.06217, 34.02810],
+    //     [-119, 34.10810]
+    //     ]
+    // return coords;
+    }
+
+    /******************************************************************************/
     // Make a Map Matching request
     function getMatch(coordinates, radius, profile) {
       // Separate the radiuses with semicolons
       var radiuses = radius.join(';')
       // Create the query
       var query = 'https://api.mapbox.com/matching/v5/mapbox/' + profile + '/' + coordinates + '?geometries=geojson&radiuses=' + radiuses + '&steps=true&access_token=' + mapboxgl.accessToken;
-
+        console.log(query);
     // var xmlHttp = new XMLHttpRequest();
     // xmlHttp.open( "GET", query, false ); // false for synchronous request
     // xmlHttp.send( null );
@@ -355,18 +423,10 @@
       }
     }
 
-    map.on('draw.create', updateRoute);
-    map.on('draw.update', updateRoute);
+    map.on('load', updateRoute);
+     map.on('draw.create', updateRoute);
+    // map.on('draw.update', updateRoute);
     map.on('draw.delete', removeRoute);
-     // find route
-        // const interval = (abs(x1 - x2) + abs(y1 - y2)) / 95; // computes maximum route length assuming we are always moving towards destination
-        // let currLoc = [x1, y1];
-        // for(i = 0; i < 95; i++){
-        //     // 3 properties
-        //     // A) distance from currLoc, B) Safety (num_accidents), C) distance remaining to destination (amount of progress)
 
-        // }
-    // Add the draw tool to the map
-    
 </script>
 {% endblock content %}
