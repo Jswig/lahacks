@@ -1,8 +1,10 @@
 name: lahacks
-
+channels:
+  - conda-forge
 dependencies:
   - python=3.7.7
   - dash=1.4.1
   - flask=1.1.1
   - geopandas=0.6.1
   - requests
+  - fbprophet
