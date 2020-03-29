@@ -307,29 +307,29 @@
               currLoc.y = dest.x - currLoc.y > 0? currLoc.y + interval/2.0 : currLoc.y - interval/2.0 ;
               locationList.push(JSON.parse(JSON.stringify([currLoc.x, currLoc.y])));
               console.log("pushed dummy point at %f, %f", currLoc.x, currLoc.y);
-              continue
+              continue;
             }
                 for (j = 0; j < positivePoints.length; j++){
                   if(minAccidents == -1 || minAccidents > positivePoints[j].properties.num_accidents){
-                    minAccidents = positivePoints[j].properties.num_accidents
-                    currLoc = {x: positivePoints[j].geometry.coordinates[0], y: positivePoints[j].geometry.coordinates[1]}
+                    minAccidents = positivePoints[j].properties.num_accidents;
+                    currLoc = {x: positivePoints[j].geometry.coordinates[0], y: positivePoints[j].geometry.coordinates[1] };
                   }
                 }
                 locationList.push(JSON.parse(JSON.stringify([currLoc.x, currLoc.y])));
                 console.log(`%d reached coords %f and %f. Number of positive points %d`, i, currLoc.x, currLoc.y, positivePoints.length );  
                 if(Math.abs(dest.x - currLoc.x) < interval && Math.abs(dest.y - currLoc.y) < interval){
                   locationList.push([[dest.x, dest.y]]);
-                  console.log("END IS REACHED")
+                  console.log("END IS REACHED");
                   console.log(locationList.join(';'));
                   break;
                 }
             }
             // 3 properties
             // A) distance from currLoc, B) Safety (num_accidents), C) distance remaining to destination (amount of progress)
-
-        });
-        console.log("Finshing Execution");
+            console.log("Finshing Execution");
         return locationList;
+        });
+        
     
     //  const coords = [[-118.14217, 34.10810],
     //     [-118.267612, 33.997698 ] ,    
