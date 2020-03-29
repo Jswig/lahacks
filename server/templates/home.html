@@ -7,6 +7,7 @@
 <script src="https://api.mapbox.com/mapbox-gl-js/v1.9.0/mapbox-gl.js"></script>
 <script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-directions/v4.0.2/mapbox-gl-directions.js"></script>
 <script>
+    alert("Success");
     mapboxgl.accessToken =
         "pk.eyJ1IjoiZ3psZWlzaW5nIiwiYSI6ImNrOGJmMnlzajA4OGUza3MyZ2gyNmRqZGEifQ.HDcR0vD84eVvS3mbM2eshA";
     var map = new mapboxgl.Map({
@@ -33,6 +34,69 @@
 
     map.addControl(new mapboxgl.NavigationControl());
     map.scrollZoom.disable();
+
+//--------------------------------------------------------------------------------------------------------------------------------------------------------------
+    var draw = new MapboxDraw({
+    // Instead of showing all the draw tools, show only the line string and delete tools
+    displayControlsDefault: false,
+    controls: {
+        line_string: true,
+        trash: true
+    },
+    styles: [
+        // Set the line style for the user-input coordinates
+        {
+        "id": "gl-draw-line",
+        "type": "line",
+        "filter": ["all", ["==", "$type", "LineString"],
+            ["!=", "mode", "static"]
+        ],
+        "layout": {
+            "line-cap": "round",
+            "line-join": "round"
+        },
+        "paint": {
+            "line-color": "#438EE4",
+            "line-dasharray": [0.2, 2],
+            "line-width": 4,
+            "line-opacity": 0.7
+        }
+        },
+        // Style the vertex point halos
+        {
+        "id": "gl-draw-polygon-and-line-vertex-halo-active",
+        "type": "circle",
+        "filter": ["all", ["==", "meta", "vertex"],
+            ["==", "$type", "Point"],
+            ["!=", "mode", "static"]
+        ],
+        "paint": {
+            "circle-radius": 12,
+            "circle-color": "#FFF"
+        }
+        },
+        // Style the vertex points
+        {
+        "id": "gl-draw-polygon-and-line-vertex-active",
+        "type": "circle",
+        "filter": ["all", ["==", "meta", "vertex"],
+            ["==", "$type", "Point"],
+            ["!=", "mode", "static"]
+        ],
+        "paint": {
+            "circle-radius": 8,
+            "circle-color": "#438EE4",
+        }
+        },
+    ]
+    });
+
+    // Add the draw tool to the map
+    map.addControl(draw);
+
+    $.getJSON()
+
+//----------------------------------------------------------------------------------------------------------------------------------------------------
 
     // HeatMap Layer
     // map.on(btnPress, function(){})
