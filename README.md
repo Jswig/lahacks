@@ -1,5 +1,5 @@
 # LA Hacks 2020
-*Jonathan Amar, Garret Leising, Oasys Okubo, Anders Poirel*
+*Jonathan Amar, Garrett Leising, Oasys Okubo, Anders Poirel*
 
 Repository for our work on LA Hacks 2020
 
