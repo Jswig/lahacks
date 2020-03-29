@@ -299,12 +299,16 @@
               console.log("pushed dummy point at %f, %f", currLoc.x, currLoc.y);
               continue;
             }
+            let tempLoc;
                 for (j = 0; j < positivePoints.length; j++){
-                  if(minAccidents == -1 || minAccidents > positivePoints[j].properties.num_accidents){
+                  if(minAccidents == -1 || minAccidents > positivePoints[j].properties.num_accidents || (minAccidents ==  positivePoints[j].properties.num_accidents 
+                     && (Math.abs(tempLoc.x - currLoc.x) + Math.abs(tempLoc.y - currLoc.y))  > Math.abs(positivePoints[j].geometry.coordinates[0] - currLoc.x) + Math.abs(positivePoints[j].geometry.coordinates[1] - currLoc.y)  )){
                     minAccidents = positivePoints[j].properties.num_accidents;
-                    currLoc = {x: positivePoints[j].geometry.coordinates[0], y: positivePoints[j].geometry.coordinates[1] };
+                    tempLoc = {x: positivePoints[j].geometry.coordinates[0], y: positivePoints[j].geometry.coordinates[1] };
                   }
                 }
+                currLoc = tempLoc;
+
                 locationList.push(JSON.parse(JSON.stringify([currLoc.x, currLoc.y])));
                 console.log(`%d reached coords %f and %f. Number of positive points %d`, i, currLoc.x, currLoc.y, positivePoints.length );  
                 if(Math.abs(dest.x - currLoc.x) < interval && Math.abs(dest.y - currLoc.y) < interval){
