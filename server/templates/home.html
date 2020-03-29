@@ -30,6 +30,10 @@
         }),
         "top-left"
     );
+
+    map.addControl(new mapboxgl.NavigationControl());
+    map.scrollZoom.disable();
+
     // HeatMap Layer
     // map.on(btnPress, function(){})
     map.on("load", function() {
