@@ -1,15 +1,11 @@
 {% extends "layout.html" %} {% block content %}
-<script src="https://api.mapbox.com/mapbox-gl-js/v1.9.0/mapbox-gl.js"></script>
-<link
-    href="https://api.mapbox.com/mapbox-gl-js/v1.9.0/mapbox-gl.css"
-    rel="stylesheet"
-/>
-<script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-directions/v4.0.2/mapbox-gl-directions.js"></script>
 
 <div class="container-fluid row align-items-end" id="mainPicture">
     <div id="map"></div>
 </div>
 
+<script src="https://api.mapbox.com/mapbox-gl-js/v1.9.0/mapbox-gl.js"></script>
+<script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-directions/v4.0.2/mapbox-gl-directions.js"></script>
 <script>
     mapboxgl.accessToken =
         "pk.eyJ1IjoiZ3psZWlzaW5nIiwiYSI6ImNrOGJmMnlzajA4OGUza3MyZ2gyNmRqZGEifQ.HDcR0vD84eVvS3mbM2eshA";
