@@ -34,12 +34,22 @@
 
     map.setMaxBounds(bounds);
 
-    // map.addControl(
-    //     new MapboxDirections({
-    //         accessToken: mapboxgl.accessToken
-    //     }),
-    //     "top-left"
-    // );
+    var mapboxDir = new MapboxDirections({
+            accessToken: mapboxgl.accessToken
+        });
+     map.addControl(
+        mapboxDir,
+        "top-left"
+    );
+
+    mapboxDir.on('route', () => {
+      origin = mapboxDir.getOrigin();
+      dest = mapboxDir.getDestination();
+      populateCoords({start: [origin.geometry.coordinates[0], origin.geometry.coordinates[1]], dest: [dest.geometry.coordinates[0], dest.geometry.coordinates[1]]}, 0);
+      console.log(`Origin %s Dest %s`, JSON.stringify(origin), JSON.stringify(dest));
+
+    })
+
 
     map.addControl(new mapboxgl.NavigationControl());
     map.scrollZoom.disable();
@@ -203,8 +213,8 @@
       // Instead of showing all the draw tools, show only the line string and delete tools
       displayControlsDefault: false,
       controls: {
-        line_string: true,
-        trash: true
+        line_string: false,
+        trash: false
       },
       styles: [
         // Set the line style for the user-input coordinates
@@ -219,7 +229,7 @@
             "line-join": "round"
           },
           "paint": {
-            "line-color": "#438EE4",
+            "line-color": "#a503fc",
             "line-dasharray": [0.2, 2],
             "line-width": 4,
             "line-opacity": 0.7
@@ -264,7 +274,6 @@
       // Get the coordinates that were drawn on the map
    
       var data = populateCoords({start: [ -118.276945, 34.068798], dest: [ -118.273285, 34.052841]});
-      console.log('Made it');
       
     }
 
@@ -274,9 +283,9 @@
      // find route
         const interval = (Math.abs(x1 - x2) + Math.abs(y1-y2))/ 10.0; // computes maximum route length assuming we are always moving towards destination
         console.log('Interval = %f', interval);
-        let currLoc = {x: x1, y: y1, numAccidents: 0};
+        let currLoc = {x: x1, y: y1};
         let nextLocation = {};
-        const dest = {x: x2, y: y2, numAccidents: 0};
+        const dest = {x: x2, y: y2};
         const locationList = [];
         locationList.push([[x1, y1]]);
 
@@ -301,8 +310,9 @@
             }
             let tempLoc;
                 for (j = 0; j < positivePoints.length; j++){
-                  if(minAccidents == -1 || minAccidents > positivePoints[j].properties.num_accidents || (minAccidents ==  positivePoints[j].properties.num_accidents 
-                     && (Math.abs(tempLoc.x - currLoc.x) + Math.abs(tempLoc.y - currLoc.y))  > Math.abs(positivePoints[j].geometry.coordinates[0] - currLoc.x) + Math.abs(positivePoints[j].geometry.coordinates[1] - currLoc.y)  )){
+                  if(minAccidents == -1 || minAccidents > positivePoints[j].properties.num_accidents ){
+                  // || (minAccidents ==  positivePoints[j].properties.num_accidents 
+                  //    && (Math.abs(tempLoc.x - currLoc.x) + Math.abs(tempLoc.y - currLoc.y))  >   Math.abs(positivePoints[j].geometry.coordinates[0] - currLoc.x) + Math.abs(positivePoints[j].geometry.coordinates[1] - currLoc.y)  )){
                     minAccidents = positivePoints[j].properties.num_accidents;
                     tempLoc = {x: positivePoints[j].geometry.coordinates[0], y: positivePoints[j].geometry.coordinates[1] };
                   }
@@ -313,14 +323,12 @@
                 console.log(`%d reached coords %f and %f. Number of positive points %d`, i, currLoc.x, currLoc.y, positivePoints.length );  
                 if(Math.abs(dest.x - currLoc.x) < interval && Math.abs(dest.y - currLoc.y) < interval){
                   locationList.push([[dest.x, dest.y]]);
-                  console.log("END IS REACHED");
-                  console.log(locationList.join(';'));
+
                   break;
                 }
             }
             // 3 properties
             // A) distance from currLoc, B) Safety (num_accidents), C) distance remaining to destination (amount of progress)
-            console.log("Finshing Execution");
             var profile = "driving";
       var data = locationList;
       var lastFeature = data.length - 1;
@@ -332,7 +340,6 @@
       coords.forEach(element => {
         radius.push(25);
       });
-      console.log(newCoords);
       getMatch(newCoords, radius, profile);
         return locationList;
         });
@@ -430,7 +437,7 @@
       }
     }
 
-    map.on('load', updateRoute);
+    // map.on('load', updateRoute);
      map.on('draw.create', updateRoute);
     // map.on('draw.update', updateRoute);
     map.on('draw.delete', removeRoute);
