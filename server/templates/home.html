@@ -260,22 +260,12 @@
     /***********************************************************/
     function updateRoute() {
       // Set the profile
-      var profile = "driving";
+      
       // Get the coordinates that were drawn on the map
    
       var data = populateCoords({start: [ -118.276945, 34.068798], dest: [ -118.273285, 34.052841]});
       console.log('Made it');
-      var lastFeature = data.length - 1;
-      var coords = data;
-      // Format the coordinates
-      var newCoords = coords.join(';')
-      // Set the radius for each coordinate pair to 25 meters
-      var radius = [];
-      coords.forEach(element => {
-        radius.push(25);
-      });
-      console.log(newCoords);
-      getMatch(newCoords, radius, profile);
+      
     }
 
     // tolerance between 0 and 1
@@ -327,6 +317,19 @@
             // 3 properties
             // A) distance from currLoc, B) Safety (num_accidents), C) distance remaining to destination (amount of progress)
             console.log("Finshing Execution");
+            var profile = "driving";
+      var data = locationList;
+      var lastFeature = data.length - 1;
+      var coords = data;
+      // Format the coordinates
+      var newCoords = coords.join(';')
+      // Set the radius for each coordinate pair to 25 meters
+      var radius = [];
+      coords.forEach(element => {
+        radius.push(25);
+      });
+      console.log(newCoords);
+      getMatch(newCoords, radius, profile);
         return locationList;
         });
         
