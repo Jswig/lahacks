@@ -19,7 +19,7 @@ def candidate_dashboard():
 def national_report():
     return render_template('national_report.html', title="The Transparency Report - National Report", iframesrc=overall_facebook_spending_addr, iframesrc_map=overall_facebook_spending_chloro_addr)
 
-@router.route("/static/traffic.geojson", methods=["GET", "POST"])
+@router.route("/static/num_accidents.geojson", methods=["GET", "POST"])
 def traffic_data():
-    f = open("./data/traffic.geojson", "r")
+    f = open("./data/num_accidents.geojson", "r")
     return f.read()
