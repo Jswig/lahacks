@@ -55,7 +55,6 @@ def draw_accidents(date):
     layout = go.Layout(
         template = 'simple_white',
         yaxis = {'title_text': 'Number of Accidents'},
-        xaxis = {'title_text': 'Time'}
     )
     data = [lower_bound, trace, upper_bound]
     return go.Figure(data, layout)
@@ -85,4 +84,4 @@ def update_forecast(date):
     return draw_accidents(date)
 
 if __name__ == '__main__':
-    app.run_server(debug = True)
+    app.run_server()
