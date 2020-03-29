@@ -1,6 +1,6 @@
 import os
 from flask import Flask
-from server.config import DevelopmentConfig, ProductionConfig
+from server.config.py import DevelopmentConfig, ProductionConfig
 
 chosen_config = DevelopmentConfig if "FLASK_RUN_FROM_CLI" in os.environ and os.environ["FLASK_RUN_FROM_CLI"] else ProductionConfig
 
