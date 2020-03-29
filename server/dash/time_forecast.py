@@ -9,17 +9,20 @@ import dash_html_components as html
 from dash.dependencies import Input, Output
 
 import pickle
+import datetime as dt
 from os.path import join
 
 DATA_PATH = '../../data'
 
 with open(join(DATA_PATH, 'models/time_forecaster.pickle'), 'rb') as f:
-   forecaster = pickle.load(f)
+    forecaster = pickle.load(f)
+    history_end = forecaster.history.iloc[-1, 0].date()
 
-def draw_accidents(hours):
-    future = forecaster.make_future_dataframe(periods = hours, freq = 'H',
+def draw_accidents(date):
+    n_hours = (date - history_end).days * 24
+    future = forecaster.make_future_dataframe(n_hours, freq = 'H',
         include_history = False)
-    forecast = forecaster.predict(future)
+    forecast = forecaster.predict(future).iloc[-24:, :]
 
     upper_bound = go.Scatter(
         name = 'Uncertainty interval',
@@ -39,7 +42,6 @@ def draw_accidents(hours):
         marker_color = '#A24A63',
         fill = 'tonexty',
         showlegend = False,
-
     )
     lower_bound = go.Scatter(
         name = 'Uncertainty lower',
@@ -53,7 +55,6 @@ def draw_accidents(hours):
     layout = go.Layout(
         template = 'simple_white',
         yaxis = {'title_text': 'Number of Accidents'},
-        xaxis = {'title_text': 'Time'}
     )
     data = [lower_bound, trace, upper_bound]
     return go.Figure(data, layout)
@@ -61,25 +62,26 @@ def draw_accidents(hours):
 app = dash.Dash(__name__)
 app.layout = html.Div([
     html.H1('Traffic accidents forecast'),
-    dcc.Input(
-        id = 'forecast_range',
-        type = 'number',
-        placeholder = 'Predict next n hours',
-        min = 1,
-    ),
+    dcc.DatePickerSingle(
+        id = 'forecast_day',
+        min_date_allowed = (history_end + dt.timedelta(days = 1)),
+        initial_visible_month = dt.date.today(),
+        date = dt.date.today() + dt.timedelta(days = 1)
+    ), 
     dcc.Graph(
         id = 'accidents_forecast',
-        figure = draw_accidents(24000),
+        figure = draw_accidents(dt.date.today() + dt.timedelta(days = 1)),
         config = {'displayModeBar' : False}
     )
 ])
 
-# @app.callback(
-#     Output('accidents_forecast', 'figure'),
-#     [Input('forecast_range', 'value')]
-# )
-# def update_forecast(n_days):
-#     return draw_accidents(n_days)
+@app.callback(
+    Output('accidents_forecast', 'figure'),
+    [Input('forecast_day', 'date')]
+)
+def update_forecast(date):
+    date = dt.datetime.strptime(date, '%Y-%m-%d').date()
+    return draw_accidents(date)
 
 if __name__ == '__main__':
-    app.run_server(debug = True)
+    app.run_server()

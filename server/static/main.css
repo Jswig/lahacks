@@ -66,22 +66,6 @@ div.card.text-white.bg-dark.mb-3 {
     outline: 0;
 }
 
-.americaRed {
-    color: #fa163f !important;
-}
-
-.americaWhite {
-    color: #e4f9ff !important;
-}
-
-.americaBlue {
-    color: #30e3ca !important;
-}
-
-.americaDarkBlue {
-    color: #0fabbc !important;
-}
-
 .jumbotron {
     margin-top: 32px;
 }
