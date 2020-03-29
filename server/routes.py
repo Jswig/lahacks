@@ -9,15 +9,15 @@ dashboard_addr = f"{ip_address}:{dashboard}"
 
 @router.route("/", methods=["GET", "POST"])
 def home():
-    return render_template('home.html', title="The Transparency Report")
+    return render_template('home.html', title="GridCast")
 
-@router.route("/candidate_dashboard", methods=["GET", "POST"])
-def candidate_dashboard():
-    return render_template('candidate_dashboard.html', title="The Transparency Report - Candidate Dashboard", iframesrc=dashboard_addr)
+@router.route("/forecast_dashboard", methods=["GET", "POST"])
+def forecast_dashboard():
+    return render_template('forecast_dashboard.html', title="GridCast - Forecast", iframesrc=dashboard_addr)
 
 @router.route("/national_report", methods=["GET", "POST"])
 def national_report():
-    return render_template('national_report.html', title="The Transparency Report - National Report", iframesrc=overall_facebook_spending_addr, iframesrc_map=overall_facebook_spending_chloro_addr)
+    return render_template('national_report.html', title="GridCast - National Report", iframesrc=overall_facebook_spending_addr, iframesrc_map=overall_facebook_spending_chloro_addr)
 
 @router.route("/static/num_accidents.geojson", methods=["GET", "POST"])
 def traffic_data():
