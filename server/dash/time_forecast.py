@@ -15,7 +15,7 @@ def draw_accidents(date):
         forecaster = pickle.load(f)
     history_end = forecaster.history.iloc[-1, 0].date()
 
-    n_hours = (date - history_end).days * 24
+    n_hours = (date - history_end).days * 24 + 12
     future = forecaster.make_future_dataframe(n_hours, freq = 'H',
         include_history = False)
     forecast = forecaster.predict(future).iloc[-24:, :]
@@ -64,15 +64,19 @@ def add_dash(server):
     dash_app = dash.Dash(
         server = server,
         routes_pathname_prefix = '/forecast_app/',
+        external_stylesheets = 'https://github.com/Jswig/lahacks/tree/master/server/static.dashboard.css'
     )
 
     dash_app.layout = html.Div([
-        html.H1('Traffic accidents forecast'),
+        html.H1(
+            'Traffic accidents forecast by day',
+            style = {'width': '48%', 'display': 'inline-block'}),
         dcc.DatePickerSingle(
             id = 'forecast_day',
             min_date_allowed = (history_end + dt.timedelta(days = 1)),
             initial_visible_month = dt.date.today(),
-            date = dt.date.today() + dt.timedelta(days = 1)
+            date = dt.date.today() + dt.timedelta(days = 1),
+            style = {'width': '48%', 'display': 'inline-block'}
         ), 
         dcc.Graph(
             id = 'accidents_forecast',

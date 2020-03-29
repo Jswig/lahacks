@@ -1,9 +1,9 @@
 from flask import render_template, url_for, flash, redirect, request, abort, Blueprint, current_app
-from .constants import ip_address, dashboard
+from .constants import ip_address #, dashboard
 
 router = Blueprint('router', __name__)
 
-dashboard_addr = f"{ip_address}:{dashboard}"
+dashboard_addr = f"{ip_address}:{5000}/forecast_app"
 
 @router.route("/", methods=["GET", "POST"])
 def home():
