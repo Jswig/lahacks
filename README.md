@@ -1,14 +1,7 @@
-# LA Hacks 2020
+# GridCast
 *Jonathan Amar, Garrett Leising, Oasys Okubo, Anders Poirel*
 
 Repository for our work on LA Hacks 2020
-
-
-Name ideas: 
-- Collision Oracle
-- Transit Augur
-- GridCast
-
 
 ## Setting up the development environment
 
