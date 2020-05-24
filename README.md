@@ -20,7 +20,7 @@ conda info
 ```
 The first line should show
 ```
-active environemnt: lahacks
+active environment: lahacks
 ```
 
 
