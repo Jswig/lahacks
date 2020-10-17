@@ -3,6 +3,8 @@
 
 Repository for our work on LA Hacks 2020
 
+<h3><a href="https://www.youtube.com/watch?v=_eKlS2_Z3XE" target="_blank">Demo Video</a></h3>
+
 ## Setting up the development environment
 
 You'll need to have anaconda or [miniconda](https://docs.conda.io/en/latest/miniconda.html) (recommended) installed.
@@ -22,5 +24,3 @@ The first line should show
 ```
 active environment: lahacks
 ```
-
-<h2><a href="https://www.youtube.com/watch?v=_eKlS2_Z3XE">Demo Video</a></h2>
