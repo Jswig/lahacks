@@ -23,10 +23,4 @@ The first line should show
 active environment: lahacks
 ```
 
-
-## Structure
-
-
-
-
-## Serving
+<h2><a href="https://www.youtube.com/watch?v=_eKlS2_Z3XE">Demo Video</a></h2>
