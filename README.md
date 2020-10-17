@@ -3,7 +3,7 @@
 
 Repository for our work on LA Hacks 2020
 
-<h3><a href="https://www.youtube.com/watch?v=_eKlS2_Z3XE" target=”_blank” >Demo Video</a></h3>
+<h3><a href="https://devpost.com/software/gridcast" target=”_blank” >Devpost</a></h3>
 
 ## Setting up the development environment
 
